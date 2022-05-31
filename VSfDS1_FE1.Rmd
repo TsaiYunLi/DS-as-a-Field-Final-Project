@@ -1,0 +1,103 @@
+---
+title: "VSfDS1_W3_TsaiYunLi"
+author: "Tsai-Yun Li"
+date: '2022-03-23'
+output:
+  pdf_document: default
+  html_document: default
+  word_document: default
+---
+# Week 3 Assignment: Steps in the Data Science Process (Example: NYC Shooting Incident Data)
+
+## Questions to Answer
+In order to demonstrate my ability to carry out all the essential steps in the data science process in a reproducible manner, I will raise some questions that I will answer through analyzing a dataset about NYC's shooting incidents from 2006 to 2021 from Data.gov:
+
+1. From 2006 to 2021, which borough(s) of NYC has/have the most numbers of shooting incidents (i.e., the most "dangerous" borough of NYC)? With how many cases?
+
+2. In the most "dangerous" borough(s) of NYC, which race(s) might be more prone to be victims of the shooting incidents? Why?
+
+## Step 1: Import and Read-in the Data
+
+```{r import_data}
+library(stringr) #in order to use function str_c
+url <- "https://data.cityofnewyork.us/api/views/833y-fsy8/rows.csv?accessType=DOWNLOAD"
+
+
+library(readr)
+data <- read_csv(url)
+class(data)
+dim(data)
+names(data)
+head(data)
+tail(data)
+
+```
+## Step 2: Tidy and Transform the Data
+
+To answer the questions I raised for this dataset, I only need the columns OCCUR_DATE, BORO, PRECINCT, and VIC_RACE from the dataset.
+
+```{r tidy_data}
+library(dplyr)
+data <- data  %>%
+  select(OCCUR_DATE, BORO, PRECINCT, VIC_RACE)
+
+head(data)
+tail(data)
+
+summary(data)
+```
+
+## Step 3: Add Visualizations and Analysis
+
+I will answer the two questions I have raised and visualize them using a bar chart and a pie chart.
+
+```{r visual_&_analysis}
+#----------Q1----------#
+library(dplyr)
+BORO_INCT_total <- tapply(data$PRECINCT, data$BORO, sum)
+BORO_INCT_total
+#Q1 answered: From 2006 to 2021, the most "dangerous" borough of NYC is BROOKLYN, which has the most numbers of shooting incidents (with 723817 cases). 
+
+#To further illustrate Q1, I created a bar chart for the data frame 'data':
+library(ggplot2)
+BORO_INCT_total_bar <- ggplot(data, aes(x = BORO, fill = BORO)) + geom_bar() +
+  labs(title = "NYC's Total Shooting Incidents by Borough (2006~2021)")
+BORO_INCT_total_bar
+
+#----------Q2----------#
+BROOKLYN_data <- data %>%
+  filter(BORO == "BROOKLYN")
+head(BROOKLYN_data)
+
+by_race <- aggregate(BROOKLYN_data$PRECINCT,
+                     by= list(race = BROOKLYN_data$VIC_RACE), sum) %>%
+  mutate(percent = round(100*x/sum(x), 2), "%")
+head(by_race, 100)
+#Q2 answered: From 2006 to 2021, in BROOKLYN, the most "dangerous" borough of NYC, BLACK people might be more prone to be victims of the shooting incidents, because they made up 83.17	% of the victims (with 601967	cases out of a total of 723817 cases).
+
+#To further illustrate Q2, I created a bar chart and a pie chart for the data frame 'by_race':
+library(ggplot2) 
+by_race_bar <- ggplot(by_race, aes(x = "Victim Race", y = percent, fill= race))+
+  geom_bar(width = 1, stat = "identity") +
+  labs(title = "Brooklyn's Total Shooting Incidents by Victim Race (2006~2021)")
+by_race_bar
+
+by_race_pie <- by_race_bar + coord_polar("y", start= 0) +
+  labs(title = "Brooklyn's Total Shooting Incidents by Victim Race (2006~2021)")
+by_race_pie 
+```
+
+## Step 4: Add Bias Identification
+
+Conclusion:
+
+Through my analysis, I found out that from 2006 to 2021, the most "dangerous" borough of NYC is BROOKLYN, which has the most numbers of shooting incidents (with 723817 cases). Among these shooting incidents, BLACK	victims made up the highest percentage, 83.17	% of the victims (with 601967	cases out of a total of 723817 cases), which is significantly higher than the second and third highest victim races, WHITE HISPANIC (7.94%, with 57437 cases) and BLACK HISPANIC (5.26%, with 38081 cases).
+
+Possible Sources of Bias:
+
+However, there might be many sources of biases. The way the data was collected, how the variables in the data frame were measured, and even the reason why the professor selected of this dataset could be biased. The two questions I raised for this assignment could also be biased since this could indicate the issues I am interested in; for instance, personal safety and racial issues in America. Thus, this analysis is very likely to be biased. It could merely be treated as a reference of but not a definite conclusion to the shooting incidents in the NYC (2006 ~ 2021).
+...
+
+```{r, include=FALSE}
+#options(tinytex.verbose = TRUE)
+```
