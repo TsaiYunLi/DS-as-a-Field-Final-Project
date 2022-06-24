@@ -1,4 +1,4 @@
-Date,Day,Sleep Quality,Bedtime,Waketime,Sleep Length,Bedtime Temp,Perceived Temp,Dream,Wake Freq,Nocturia Freq,DrankWater Freq,Waked by Wife,Wife Nocturia,Meta Data
+Date,Day,Sleep Quality Level,Bedtime,Waketime,Sleep Length,Bedtime Temp,Perceived Temp,Dream,Wake Freq,Nocturia Freq,DrankWater Freq,Waked by Wife,Wife Nocturia,Meta Data
 5/6/22,Fri,5 ,11:00 PM,7:00 AM,8:00,26.3 ,Fine,Forgot,1 ,0 ,0 ,Yes,No,
 5/7/22,Sat,7 ,1:00 AM,8:30 AM,7:30,26.3 ,Fine,Forgot,1 ,0 ,0 ,Unsure,Yes,
 5/8/22,Sun,4 ,11:20 PM,7:30 AM,8:10,26.5 ,Hot,Forgot,0 ,0 ,0 ,No,Yes,Drank too much water at night; Stomach a bit uncomfortable
